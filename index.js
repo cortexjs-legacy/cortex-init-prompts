@@ -206,11 +206,17 @@ var PROMPT_SCHEMAS = {
   keywords: {
     message: 'Keywords',
     filter: function (keywords) {
-      return keywords.split(/\s*,?\s*/g)
+      if (!util.isString(keywords)) {
+        return [];
+      }
+
+      keywords = keywords.split(/\s*,?\s*/g)
       .map(function (keyword) {
         return keyword.trim();
       })
       .filter(Boolean);
+
+      return keywords;
     }
   },
 
