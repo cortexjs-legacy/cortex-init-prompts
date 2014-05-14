@@ -1,6 +1,6 @@
 {
   "name": "cortex-init-prompts",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Prompts asked when initializing a new cortex project.",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,10 @@
     "url": "git@github.com:cortexjs/cortex-init-prompts.git"
   },
   "keywords": [
-    "cortex-init-prompts"
+    "cortex",
+    "init",
+    "prompts",
+    "prompt"
   ],
   "engines": {
     "node": ">=0.8.0"
