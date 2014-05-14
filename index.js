@@ -17,9 +17,37 @@ var git = require('./lib/git');
 function prompt (options, callback) {
   var schemas = prompt._parseSchemas(PROMPT_SCHEMAS, options);
   asks.prompt(schemas, function (result) {
+    prompt.clean(result);
     callback(result);
   });
 }
+
+
+prompt.clean = function (pkg) {
+  if (!pkg.author) {
+    var author_name = pkg.author_name;
+    var author_email = pkg.author_email;
+    delete pkg.author_name;
+    delete pkg.author_email;
+
+    pkg.author = {
+      name: author_name,
+      email: author_email
+    };
+  }
+
+  var bugs_url = git.githubUrl(pkg.repository, 'issues');
+  pkg.bugs = {
+    url: bugs_url
+  };
+
+  pkg.homepage = git.githubUrl(pkg.repository);
+  pkg.devDependencies = {
+    neuron: '*'
+  };
+
+  return pkg;
+};
 
 
 prompt._parseSchemas = function (schemas, options) {
@@ -118,6 +146,11 @@ var PROMPT_SCHEMAS = {
     }
   }, 
 
+  description: {
+    message: 'Description',
+    default: 'The coolest cortex module.'
+  },
+
   main: {
     message: 'Main module/entry point(optional)',
     default: 'index.js',
@@ -133,11 +166,6 @@ var PROMPT_SCHEMAS = {
 
       return true;
     }
-  }, 
-
-  description: {
-    message: 'Description',
-    default: 'The coolest cortex module.'
   }, 
 
   repository: {
@@ -163,7 +191,6 @@ var PROMPT_SCHEMAS = {
           answers.git_user = user;
 
           origin = 'git://github.com/' + user + '/' + node_path.basename(process.cwd()) + '.git';
-          console.log(origin)
           done(origin);
         });
       });
@@ -176,21 +203,16 @@ var PROMPT_SCHEMAS = {
     warning: 'Should be a public git:// URI.'
   }, 
 
-  homepage: {
-    message: 'Project homepage',
-    // If GitHub is the origin, the (potential) homepage is easy to figure out.
-    default: function(answers) {
-      return git.githubUrl(answers.repository);
+  keywords: {
+    message: 'Keywords',
+    filter: function (keywords) {
+      return keywords.split(/\s*,?\s*/g)
+      .map(function (keyword) {
+        return keyword.trim();
+      })
+      .filter(Boolean);
     }
-  }, 
-
-  bugs: {
-    message: 'Project issues tracker',
-    // If GitHub is the origin, the issues tracker is easy to figure out.
-    default: function(answers) {
-      return git.githubUrl(answers.repository, 'issues');
-    }
-  }, 
+  },
 
   license: {
     message: 'License',
@@ -218,16 +240,5 @@ var PROMPT_SCHEMAS = {
       git.config('user.email', done);
     },
     warning: 'Should be a valid email address.'
-  }, 
-
-  // author_url: {
-  //   message: 'Author url',
-  //   validate: function (url) {
-  //     if (url && !node_url.parse(url).host) {
-  //       return 'Should be a valid public URL.'
-  //     }
-
-  //     return true;
-  //   }
-  // }
+  }
 };
