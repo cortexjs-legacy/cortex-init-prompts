@@ -47,7 +47,6 @@ prompt.clean = function (pkg) {
     assert: '*'
   };
 
-  pkg.main = node_path.join('.', pkg.main);
   return pkg;
 };
 
@@ -207,7 +206,7 @@ var PROMPT_SCHEMAS = {
           }
 
           // Save as git_user for sanitize step.
-          answers.git_user = user;
+          // answers.git_user = user;
 
           origin = 'git://github.com/' + user + '/' + node_path.basename(process.cwd()) + '.git';
           done(origin);
