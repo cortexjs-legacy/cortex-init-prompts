@@ -72,7 +72,7 @@ prompt._schemaWarning = function (schema) {
   var validate = schema.validate;
   var warning = schema.warning;
 
-  if (!util.isFunction(validate) && warning) {
+  if (typeof validate !== 'function' && warning) {
     if (!util.isRegExp(validate)) {
       validate = /^.+$/;
     }
@@ -206,7 +206,7 @@ var PROMPT_SCHEMAS = {
   keywords: {
     message: 'Keywords',
     filter: function (keywords) {
-      if (!util.isString(keywords)) {
+      if (typeof keywords !== 'string') {
         return [];
       }
 
