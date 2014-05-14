@@ -43,10 +43,22 @@ prompt.clean = function (pkg) {
 
   pkg.homepage = git.githubUrl(pkg.repository);
   pkg.devDependencies = {
-    neuron: '*'
+    neuron: '*',
+    assert: '*'
   };
 
   return pkg;
+};
+
+
+prompt._ensureExt = function(path, ext) {
+  var regex = new RegExp('\\.' + ext + '$', 'i');
+
+  if (!regex.test(path)) {
+    path += '.' + ext;
+  }
+
+  return path;
 };
 
 
@@ -144,7 +156,7 @@ var PROMPT_SCHEMAS = {
 
       done(true);
     }
-  }, 
+  },
 
   description: {
     message: 'Description',
@@ -165,8 +177,14 @@ var PROMPT_SCHEMAS = {
       }
 
       return true;
+    },
+    filter: function (main) {
+      main = main.trim();
+
+      // default value of package.main must be a `.js` file
+      return prompt._ensureExt(main || 'index.js', 'js');
     }
-  }, 
+  },
 
   repository: {
     message: 'Project git repository',
@@ -217,7 +235,8 @@ var PROMPT_SCHEMAS = {
       .filter(Boolean);
 
       return keywords;
-    }
+    },
+    warning: 'To make your package easier to search, plz add some keywords.'
   },
 
   license: {
