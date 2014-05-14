@@ -13,7 +13,7 @@ var git = require('./lib/git');
 
 
 // @param {Object} options
-// - licences
+// - licenses
 function prompt (options, callback) {
   var schemas = prompt._parseSchemas(PROMPT_SCHEMAS, options);
   asks.prompt(schemas, function (result) {
@@ -29,8 +29,8 @@ prompt._parseSchemas = function (schemas, options) {
   for (key in schemas) {
     schema = prompt._schemaWarning(schemas[key]);
     schema.name = key;
-    if (key === 'licence' && options.licences) {
-      schema.choices = options.licences;
+    if (key === 'license' && options.licenses) {
+      schema.choices = options.licenses;
     }
 
     results.push(schema);
@@ -220,14 +220,14 @@ var PROMPT_SCHEMAS = {
     warning: 'Should be a valid email address.'
   }, 
 
-  author_url: {
-    message: 'Author url',
-    validate: function (url) {
-      if (url && !node_url.parse(url).host) {
-        return 'Should be a valid public URL.'
-      }
+  // author_url: {
+  //   message: 'Author url',
+  //   validate: function (url) {
+  //     if (url && !node_url.parse(url).host) {
+  //       return 'Should be a valid public URL.'
+  //     }
 
-      return true;
-    }
-  }
+  //     return true;
+  //   }
+  // }
 };
