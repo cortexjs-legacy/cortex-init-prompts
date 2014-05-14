@@ -228,7 +228,7 @@ var PROMPT_SCHEMAS = {
         return [];
       }
 
-      keywords = keywords.split(/\s*,?\s*/g)
+      keywords = keywords.split(/\s+|,/g)
       .map(function (keyword) {
         return keyword.trim();
       })
