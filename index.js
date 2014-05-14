@@ -47,6 +47,7 @@ prompt.clean = function (pkg) {
     assert: '*'
   };
 
+  pkg.main = node_path.join('.', pkg.main);
   return pkg;
 };
 
