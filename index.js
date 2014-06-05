@@ -46,10 +46,10 @@ prompt.clean = function (pkg, defaults) {
 
   var parsed_repo = github(pkg.repository);
   pkg.bugs = {
-    url: parsed_repo.https_href + '/issues'
+    url: parsed_repo.http_href + '/issues'
   };
 
-  pkg.homepage = parsed_repo.https_href;
+  pkg.homepage = parsed_repo.http_href;
   pkg.engines = {
     neuron: '*',
   };
@@ -228,7 +228,7 @@ var PROMPT_SCHEMAS = {
     },
     validate: function (value) {
       var parsed = github(value);
-      return !!github.host;
+      return !!parsed.host;
     },
     filter: function(repository) {
       return github(repository).git_clone_url;
@@ -283,4 +283,4 @@ var PROMPT_SCHEMAS = {
   }
 };
 
-prompts.PROMPT_SCHEMAS = PROMPT_SCHEMAS;
+prompt.PROMPT_SCHEMAS = PROMPT_SCHEMAS;
