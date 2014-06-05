@@ -1,6 +1,6 @@
 {
   "name": "cortex-init-prompts",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Prompts asked when initializing a new cortex project.",
   "main": "index.js",
   "scripts": {
@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "asks": "^1.0.0",
-    "semver": "^2.3.0"
+    "semver": "^2.3.0",
+    "githuburl": "~0.1.6"
   }
 }

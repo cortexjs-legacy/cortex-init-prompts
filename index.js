@@ -7,6 +7,7 @@ var semver = require('semver');
 var node_path = require('path');
 var node_url = require('url');
 var util = require('util');
+var github = require('githuburl');
 
 var spawn = require('./lib/spawn');
 var git = require('./lib/git');
@@ -14,16 +15,23 @@ var git = require('./lib/git');
 
 // @param {Object} options
 // - licenses
+// - skip {Object} <name>: <default>
 function prompt (options, callback) {
   var schemas = prompt._parseSchemas(PROMPT_SCHEMAS, options);
   asks.prompt(schemas, function (result) {
-    prompt.clean(result);
+    prompt.clean(result, options.skip);
     callback(result);
   });
 }
 
 
-prompt.clean = function (pkg) {
+prompt.clean = function (pkg, defaults) {
+  var key;
+  var value;
+  for (key in defaults) {
+    pkg[key] = defaults[key];
+  }
+
   if (!pkg.author) {
     var author_name = pkg.author_name;
     var author_email = pkg.author_email;
@@ -36,14 +44,16 @@ prompt.clean = function (pkg) {
     };
   }
 
-  var bugs_url = git.githubUrl(pkg.repository, 'issues');
+  var parsed_repo = github(pkg.repository);
   pkg.bugs = {
-    url: bugs_url
+    url: parsed_repo.https_href + '/issues'
   };
 
-  pkg.homepage = git.githubUrl(pkg.repository);
-  pkg.devDependencies = {
+  pkg.homepage = parsed_repo.https_href;
+  pkg.engines = {
     neuron: '*',
+  };
+  pkg.devDependencies = {
     assert: '*'
   };
 
@@ -66,14 +76,17 @@ prompt._parseSchemas = function (schemas, options) {
   var key;
   var schema;
   var results = [];
+  var skip = options.skip;
   for (key in schemas) {
-    schema = prompt._schemaWarning(schemas[key]);
-    schema.name = key;
-    if (key === 'license' && options.licenses) {
-      schema.choices = options.licenses;
-    }
+    if (!(key in skip)) {
+      schema = prompt._schemaWarning(schemas[key]);
+      schema.name = key;
+      if (key === 'license' && options.licenses) {
+        schema.choices = options.licenses;
+      }
 
-    results.push(schema);
+      results.push(schema);
+    }
   }
 
   return results;
@@ -213,12 +226,14 @@ var PROMPT_SCHEMAS = {
         });
       });
     },
-    filter: function(repository) {
-      // An additional computed "git_user" property.
-      var repo = git.githubUrl(repository);
-      return repo;
+    validate: function (value) {
+      var parsed = github(value);
+      return !!github.host;
     },
-    warning: 'Should be a public git:// URI.'
+    filter: function(repository) {
+      return github(repository).git_clone_url;
+    },
+    warning: 'Should be a public git URI.'
   }, 
 
   keywords: {
@@ -267,3 +282,5 @@ var PROMPT_SCHEMAS = {
     warning: 'Should be a valid email address.'
   }
 };
+
+prompts.PROMPT_SCHEMAS = PROMPT_SCHEMAS;
