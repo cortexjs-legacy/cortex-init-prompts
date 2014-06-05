@@ -206,9 +206,6 @@ var PROMPT_SCHEMAS = {
 
       git.origin(function (origin) {
         if (origin) {
-          // Ssh url needs much more configuration to clone 
-          // Change any `git@...:... uri` to `git://.../...` format.
-          origin = origin.replace(/^git@([^:]+):/, 'git://$1/');
           return done(origin);
         }
 
@@ -231,6 +228,8 @@ var PROMPT_SCHEMAS = {
       return !!parsed.host;
     },
     filter: function(repository) {
+      // Ssh url needs much more configuration to clone 
+      // Change any `git@...:... uri` to `git://.../...` format.
       return github(repository).git_clone_url;
     },
     warning: 'Should be a public git URI.'
