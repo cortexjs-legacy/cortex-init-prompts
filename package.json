@@ -1,6 +1,6 @@
 {
   "name": "cortex-init-prompts",
-  "version": "0.3.2",
+  "version": "1.0.0",
   "description": "Prompts asked when initializing a new cortex project.",
   "main": "index.js",
   "scripts": {

@@ -50,9 +50,6 @@ prompt.clean = function (pkg, defaults) {
   };
 
   pkg.homepage = parsed_repo.http_href;
-  pkg.engines = {
-    neuron: '*',
-  };
   pkg.devDependencies = {
     assert: '*'
   };
