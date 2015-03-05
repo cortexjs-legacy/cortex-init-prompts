@@ -112,6 +112,13 @@ prompt._schemaWarning = function (schema) {
   return schema;
 };
 
+prompt.mixinExtraSchemas = function(schemas){
+  for(var key in schemas){
+    if(!PROMPT_SCHEMAS[key]){
+      PROMPT_SCHEMAS[key] = schemas[key];
+    }
+  }
+}
 
 var PROMPT_SCHEMAS = {
   name: {
@@ -137,7 +144,7 @@ var PROMPT_SCHEMAS = {
       if (!/[a-z0-9]$/.test(name)) {
         return done('Must end with a letter or number.');
       }
-      
+
       // Weird that inquirer requires a `true` passed to `done` as a success.
       done(true);
     }
@@ -225,12 +232,12 @@ var PROMPT_SCHEMAS = {
       return !!parsed.host;
     },
     filter: function(repository) {
-      // Ssh url needs much more configuration to clone 
+      // Ssh url needs much more configuration to clone
       // Change any `git@...:... uri` to `git://.../...` format.
       return github(repository).git_clone_url;
     },
     warning: 'Should be a public git URI.'
-  }, 
+  },
 
   keywords: {
     message: 'Keywords',
@@ -258,7 +265,7 @@ var PROMPT_SCHEMAS = {
       'MIT',
       'BSD'
     ]
-  }, 
+  },
 
   author_name: {
     message: 'Author name',
@@ -267,7 +274,7 @@ var PROMPT_SCHEMAS = {
       git.config('user.name', done);
     },
     warning: 'May consist of any characters.'
-  }, 
+  },
 
   author_email: {
     message: 'Author email',
