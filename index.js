@@ -114,9 +114,7 @@ prompt._schemaWarning = function (schema) {
 
 prompt.mixinExtraSchemas = function(schemas){
   for(var key in schemas){
-    if(!PROMPT_SCHEMAS[key]){
-      PROMPT_SCHEMAS[key] = schemas[key];
-    }
+    PROMPT_SCHEMAS[key] = schemas[key];
   }
 }
 
