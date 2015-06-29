@@ -175,7 +175,7 @@ var PROMPT_SCHEMAS = {
 
   description: {
     message: 'Description',
-    default: 'The coolest cortex module.'
+    default: ''
   },
 
   main: {
